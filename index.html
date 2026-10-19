@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exam Tasks: iframe-коди для Kwiga</title>
+<link rel="stylesheet" href="shared/core.css">
+<style>
+ .code{background:#22271E;color:#E9F2E4;border-radius:10px;padding:12px 14px;font-family:Consolas,monospace;font-size:12.5px;white-space:pre-wrap;word-break:break-all;margin:8px 0}
+ .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+ input.url{flex:1;min-width:260px;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font-size:15px;font-family:inherit}
+ .st{font-size:12px;font-weight:700;border-radius:12px;padding:2px 10px}
+ .st.ready{background:var(--green-soft);color:var(--green)} .st.soon{background:var(--orange-soft);color:#9A5A00}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Exam Tasks · 7 екзаменаційних завдань</h1>
+  <p class="sub">Додатковий модуль (тариф з перевіркою). Службова сторінка для тебе: готові iframe-коди для кожного з 7 завдань. Полів для відповіді на сторінках немає: відповідь учень пише на твоїй платформі.</p>
+
+  <div class="card">
+    <h2>1. Адреса сайту на Vercel</h2>
+    <div class="row"><input class="url" id="base" value="https://ielts-exam-tasks.vercel.app"><button class="btn btn-primary" onclick="render()">Оновити коди</button></div>
+    <p class="small" style="margin-top:8px">Без слеша в кінці. Усі коди нижче підставляють цю адресу автоматично.</p>
+  </div>
+
+  <div class="card">
+    <h2>2. Як вставляти в Kwiga</h2>
+    <p>У кожному уроці Kwiga додай блок «HTML-код» (або iframe) і встав код нижче. Кожне завдання має кнопку 📚 зі словником (розділи цього типу відкриті першими). Окрема сторінка «Словник» — остання картка.</p>
+  </div>
+
+  <div id="list"></div>
+</div>
+<script>
+var LESSONS = [
+  {id:'01', file:'tasks/01-line-graph.html',      title:'Exam Task 1 · Line graph',      status:'ready'},
+  {id:'02', file:'tasks/02-pie-charts.html',      title:'Exam Task 2 · Pie charts',      status:'ready'},
+  {id:'03', file:'tasks/03-bar-chart.html',       title:'Exam Task 3 · Bar chart',       status:'ready'},
+  {id:'04', file:'tasks/04-table.html',           title:'Exam Task 4 · Table',           status:'ready'},
+  {id:'05', file:'tasks/05-process-diagram.html', title:'Exam Task 5 · Process diagram', status:'ready'},
+  {id:'06', file:'tasks/06-maps.html',            title:'Exam Task 6 · Maps',            status:'ready'},
+  {id:'07', file:'tasks/07-mixed-task.html',      title:'Exam Task 7 · Mixed task',      status:'ready'},
+  {id:'08', file:'tasks/vocabulary.html',         title:'Словник (окрема сторінка)',      status:'ready'}
+];
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function render(){
+  var base=document.getElementById('base').value.replace(/\/+$/,'');
+  document.getElementById('list').innerHTML = LESSONS.map(function(l){
+    var url=base+'/'+l.file, fid='ielts-'+l.id;
+    var A='<iframe src="'+url+'" width="100%" height="1500" style="border:0;border-radius:12px;" loading="lazy"></iframe>';
+    var B='<iframe id="'+fid+'" src="'+url+'" width="100%" height="1500" style="border:0;border-radius:12px;" loading="lazy"></iframe>\n'+
+      '<script>window.addEventListener("message",function(e){var f=document.getElementById("'+fid+'");if(f&&e.source===f.contentWindow&&e.data&&e.data.type==="ielts-resize"){f.style.height=e.data.height+"px";}});<\/script>';
+    return '<div class="card"><span class="st ready">готово</span><h2 style="margin-top:8px">'+l.title+'</h2><p class="small">'+url+'</p>'+
+      '<p><b>Варіант A (рекомендовано):</b> фіксована висота, прокрутка всередині. Кнопка «Словник» завжди перед очима.</p><div class="code" id="a'+l.id+'">'+esc(A)+'</div><button class="btn btn-primary" onclick="copyCode(\'a'+l.id+'\')">Скопіювати код A</button>'+
+      (l.file.indexOf('vocabulary')<0?'<details class="d" style="margin-top:10px"><summary>Варіант B: на всю висоту (без внутрішньої прокрутки)</summary><p class="small" style="margin:6px 0">Потрібен дозвіл Kwiga на скрипт у HTML-блоці. На дуже довгій сторінці кнопки угорі можуть бути далеко від екрана.</p><div class="code" id="b'+l.id+'">'+esc(B)+'</div><button class="btn btn-ghost" onclick="copyCode(\'b'+l.id+'\')">Скопіювати код B</button></details>':'')+
+      ' <a class="btn btn-ghost" style="text-decoration:none" target="_blank" href="'+l.file+'">Відкрити завдання</a></div>';
+  }).join('');
+}
+function copyCode(id){var t=document.getElementById(id).textContent;
+  if(navigator.clipboard)navigator.clipboard.writeText(t);else{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}
+  alert('Скопійовано. Встав у блок HTML-коду в Kwiga.');}
+render();
+</script>
+</body>
+</html>

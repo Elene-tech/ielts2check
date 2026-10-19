@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Словник · Exam Tasks</title>
+<link rel="stylesheet" href="../shared/core.css">
+<style>.vc-sec summary{font-size:16px} table.vc-t{font-size:14.5px} body{padding-bottom:40px}</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Словник · Exam Tasks</h1>
+  <p class="sub">Повний словник модулів 1–7. Розділи типу завдання відкриті першими; решту знайдеш пошуком. «Основа» достатньо для Band 7.</p>
+  <div id="v"></div>
+</div>
+<script src="../data/vocab.js"></script>
+<script src="../shared/vocab.js"></script>
+<script>
+  var q=new URLSearchParams(location.search), t=q.get('type')||'';
+  var f=(window.VOCAB||[]).filter(function(s){return t&&s.id.indexOf(t+':')===0&&s.tier!=='extra';}).map(function(s){return s.id;});
+  window.renderVocab(document.getElementById('v'),{focus:f});
+  document.querySelectorAll('.vc-focus').forEach(function(d){d.open=true;});
+  document.querySelector('.vc-tools').style.top='0';
+</script>
+</body>
+</html>
